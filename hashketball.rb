@@ -1,3 +1,4 @@
+require 'pry'
 # Write your code below game_hash
 def game_hash
   {
@@ -126,4 +127,61 @@ def game_hash
   }
 end
 
+
 # Write code here
+
+def all_players
+  game_hash[:home][:players].concat(game_hash[:away][:players])
+end
+
+def num_points_scored(name)
+  # player_found = nil
+  # all_players.each do |player|
+  #   if player[:player_name] == name
+  #     # binding.pry
+  #     return player[:points]
+  #   end
+  # end
+  player_found = all_players.find {|player| player[:player_name] == name}
+  (player_found && player_found[:points]) || "who?"
+end
+
+def shoe_size(name)
+  player_found = all_players.find {|player| player[:player_name] == name}
+  return player_found ? player_found[:shoe] : "who?"
+end
+
+def team_colors(team_name)
+  # return game_hash[:home][:team_name] == team_name ? game_hash[:home][:colors] : game_hash[:away][:colors]
+
+
+  if game_hash[:home][:team_name] == team_name
+    game_hash[:home][:colors]
+  elsif game_hash[:away][:team_name] == team_name
+    game_hash[:away][:colors]
+  else
+    return "We do not have that team!"
+  end
+end
+
+def team_names
+  return [game_hash[:home][:team_name], game_hash[:away][:team_name]]
+end
+
+def player_numbers(team_name)
+  if game_hash[:home][:team_name] == team_name
+    return game_hash[:home][:players].map {|player| player[:number]}
+  elsif game_hash[:away][:team_name] == team_name
+    return game_hash[:away][:players].map {|player| player[:number]}
+  end
+  return "The team doesn't exist"
+end
+
+def winning_team
+  home_score = game_hash[:home][:players].reduce(0) {|acc, player| acc + player[:points]}
+  away_score = game_hash[:away][:players].sum {|player| player[:points]}
+  # home_score = game_hash[:home][:players].sum {|player| player[:points]}
+  home_score > away_score ? game_hash[:home][:team_name] : game_hash[:away][:team_name]
+end
+
+puts(winning_team)
